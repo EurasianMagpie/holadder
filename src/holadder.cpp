@@ -34,7 +34,7 @@ bool modifyLadderConfFile(const char* filePath) {
 
 void restartUfw() {
 	std::system("ufw disable");
-	std::system("ufw enable");
+	std::system("echo \"y\" | ufw enable");
 }
 
 void restartService() {
