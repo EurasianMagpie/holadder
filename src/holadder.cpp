@@ -1,4 +1,4 @@
-﻿// holadder.cpp: 定义应用程序的入口点。
+﻿// holadder.cpp
 //
 
 #include <stdio.h>
