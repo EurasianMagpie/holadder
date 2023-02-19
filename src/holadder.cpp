@@ -12,11 +12,13 @@ void applyUfwRuleForNewPort(int portFrom, int portTo) {
     std::system(szCmd);
 }
 
-bool modifyLadderConfFile(const char* filePath) {
+bool modifyLadderConfByServiceName(const char* serviceName) {
     std::cout << "[-] modifyLadderConfFile:" << std::endl;
+    char szFilePath[1024] = {};
+    sprintf(szFilePath, "/etc/openvpn/%s.conf", serviceName);
     LadderConfUtil::LadderConf conf;
-    if (!conf.parse(filePath)) {
-        std::cout << "    invalid conf file or path > " << filePath << std::endl;
+    if (!conf.parse(szFilePath)) {
+        std::cout << "    invalid conf file or path > " << szFilePath << std::endl;
         return false;
     }
     std::string v;
@@ -33,7 +35,7 @@ bool modifyLadderConfFile(const char* filePath) {
 
     std::cout << "    port\t" << port << " -> " << szPort << std::endl;
 
-    return conf.save(filePath);
+    return conf.save(szFilePath);
 }
 
 void restartUfw() {
@@ -41,24 +43,30 @@ void restartUfw() {
     std::system("echo \"y\" | ufw enable");
 }
 
-void restartService() {
-    std::system("systemctl restart openvpn@x1");
+void restartService(const char* serviceName) {
+    char szCmd[128] = {};
+    sprintf(szCmd, "systemctl restart openvpn@%s", serviceName);
+    std::system(szCmd);
 }
 
 int main(int argc, char *argv[])
 {
     std::cout << "Hello Holadder." << std::endl;
-    if (argc != 2) {
-        std::cout << "    usage: holadder <conf file path>" << std::endl;
+    const char* serviceName = nullptr;
+    if (argc == 1) {
+        std::cout << "    usage: holadder [openvpn service name]" << std::endl;
         return 0;
     }
+    else {
+        serviceName = argv[1];
+    }
 
-    if (!modifyLadderConfFile(argv[1])) {
+    if (!modifyLadderConfByServiceName(serviceName)) {
         return 0;
     }
 
     restartUfw();
-    restartService();
+    restartService(serviceName);
 
     return 0;
 }
