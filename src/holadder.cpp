@@ -13,9 +13,9 @@ void applyUfwRuleForNewPort(int portFrom, int portTo) {
 }
 
 bool modifyLadderConfByServiceName(const char* serviceName) {
-    std::cout << "[-] modifyLadderConfFile:" << std::endl;
     char szFilePath[1024] = {};
     sprintf(szFilePath, "/etc/openvpn/%s.conf", serviceName);
+    std::cout << "[-] modifyLadderConf:" << serviceName << " File: " << szFilePath << std::endl;
     LadderConfUtil::LadderConf conf;
     if (!conf.parse(szFilePath)) {
         std::cout << "    invalid conf file or path > " << szFilePath << std::endl;
