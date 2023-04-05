@@ -83,6 +83,7 @@ int main(int argc, char *argv[])
     serviceName = argv[1];
     batchCount = atoi(argv[2]);
     if (batchCount < 1) {
+        std::cout << "    invalid batch count" << std::endl;
         std::cout << usage << std::endl;
         return 0;
     }
@@ -92,12 +93,13 @@ int main(int argc, char *argv[])
         char szServiceName[16] = {};
         sprintf(szServiceName, "%s%d", serviceName, i);
 
-        if (basePort = 0) {
+        if (basePort == 0) {
             basePort = getBasePortFromServiceName(szServiceName) + batchCount;
+            std::cout << "    using base port:" << basePort << " from " << szServiceName << std::endl;
         }
 
-        modifyLadderConfByServiceName(serviceName, basePort++);
-        restartService(serviceName);
+        modifyLadderConfByServiceName(szServiceName, basePort++);
+        restartService(szServiceName);
     }
     restartUfw();
     return 0;
