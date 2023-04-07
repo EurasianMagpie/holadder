@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"holadderServer/conf"
 	"holadderServer/param"
@@ -31,16 +32,19 @@ func handleMovePort(c *gin.Context) {
 	handleQueryCurrentPort(c)
 }
 
-func startHoladderServer() {
+func startHoladderServer(port string) {
 	eng := gin.Default()
 
 	apisubdomain := eng.Group("/holadder")
 	apisubdomain.GET("/query", handleQueryCurrentPort)
 	apisubdomain.GET("/move", handleMovePort)
 
-	eng.Run("127.0.0.1:8080")
+	addr := "127.0.0.1:" + port
+	eng.Run(addr)
 }
 
 func main() {
-	startHoladderServer()
+	port := flag.String("port", "8080", "specify listen port")
+	flag.Parse()
+	startHoladderServer(*port)
 }
