@@ -26,15 +26,15 @@ func handleQueryCurrentPort(c *gin.Context) {
 
 // http://localhost:8080/holadder/move
 func handleMovePort(c *gin.Context) {
-	cmd := fmt.Sprintf("./holadder %s %s", param.GetGlobalParams().ServiceName, param.GetGlobalParams().BatchCount)
-	fmt.Println("commandline:", cmd)
+	cmdline := fmt.Sprintf("./holadder %s %s", param.GetGlobalParams().ServiceName, param.GetGlobalParams().BatchCount)
+	fmt.Println("commandline:", cmdline)
 	cmd := exec.Command("./holadder", param.GetGlobalParams().ServiceName, param.GetGlobalParams().BatchCount)
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(200, resp.FormResult(701, string("execute command failed."), gin.H{}))
 		return
 	}
-	
+
 	handleQueryCurrentPort(c)
 }
 
