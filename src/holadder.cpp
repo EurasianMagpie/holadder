@@ -6,7 +6,7 @@
 
 void applyUfwRuleForNewPort(int portFrom, int portTo) {
     char szCmd[64] = {};
-    sprintf(szCmd, "ufw deny %d/udp", portFrom);
+    sprintf(szCmd, "ufw delete allow %d/udp", portFrom);
     std::system(szCmd);
     sprintf(szCmd, "ufw allow %d/udp", portTo);
     std::system(szCmd);
